@@ -1,12 +1,28 @@
 # Example Go Client
 
-This directory contains a minimal Go program that reports its status back to [Kuberhealthy](https://github.com/kuberhealthy/kuberhealthy). The program reads the `KH_REPORTING_URL` and `KH_RUN_UUID` environment variables injected into checker pods and sends either a success or failure result using the `checkclient` package.
+This repository contains a minimal Go example program under `cmd/example` that reports its status back to [Kuberhealthy](https://github.com/kuberhealthy/kuberhealthy). The example uses the official `checkclient` package from the Kuberhealthy project, which you can import into your own Go checks.
 
-## Customizing the Check
+## Using the Kuberhealthy check client
 
-1. Edit `main.go` and add your own logic.
-2. Call `checkclient.ReportSuccess()` when your check passes.
-3. Call `checkclient.ReportFailure([]string{"message"})` when it fails.
+Import the client and report success or failure:
+
+```go
+import checkclient "github.com/kuberhealthy/kuberhealthy/v3/pkg/checkclient"
+
+func runCheck() error {
+    // do some work...
+    if problem {
+        return checkclient.ReportFailure([]string{"something went wrong"})
+    }
+    return checkclient.ReportSuccess()
+}
+```
+
+The client expects the `KH_REPORTING_URL` and `KH_RUN_UUID` environment variables, which are provided by Kuberhealthy when the check runs.
+
+## Example program
+
+`cmd/example/main.go` demonstrates using `checkclient` to report either success or failure based on the `FAIL` environment variable.
 
 ## Building
 
