@@ -2,10 +2,10 @@ BINARY := example-check
 IMAGE ?= example-check:latest
 
 build:
-	go build -o $(BINARY) .
+	go build -o $(BINARY) ./cmd/example
 
 docker-build:
-	docker build -t $(IMAGE) -f Dockerfile ../..
+	docker build -t $(IMAGE) .
 
 docker-push:
 	docker push $(IMAGE)

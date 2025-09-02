@@ -4,8 +4,7 @@ WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-WORKDIR /src/clients/go
-RUN go build -o /bin/example-check .
+RUN go build -o /bin/example-check ./cmd/example
 
 FROM gcr.io/distroless/base-debian12
 COPY --from=builder /bin/example-check /example-check

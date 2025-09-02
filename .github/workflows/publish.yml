@@ -1,0 +1,25 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go build ./...
+      - name: Log in to ghcr
+        run: echo "${{ github.token }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - name: Build image
+        run: docker build -t ghcr.io/${{ github.repository }}/example-check:${{ github.ref_name }} .
+      - name: Push image
+        run: docker push ghcr.io/${{ github.repository }}/example-check:${{ github.ref_name }}
